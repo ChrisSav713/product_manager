@@ -1,6 +1,5 @@
 import './App.css';
 import React from 'react'
-import ProductForm from './components/ProductForm'
 
 function App() {
   return (

@@ -30,6 +30,11 @@ const ProductForm = (props) => {
                     ...products,
                     res.data
                 ])
+                setFormData({
+                    title:"",
+                    price:"",
+                    description:""
+                })
             })
             .catch((err) => console.error(err))
     }

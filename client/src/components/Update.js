@@ -3,7 +3,7 @@ import axios from 'axios';
 import {useParams} from "react-router-dom";
 import Modal from 'react-bootstrap/Modal'
 import {useNavigate} from 'react-router-dom'
-import {Form, Button} from 'react-bootstrap'
+import {Button, Form} from 'react-bootstrap'
 
 const Detail = (props) => {
     const [product, setProduct] = useState({})
@@ -21,22 +21,30 @@ const Detail = (props) => {
     const navigate = useNavigate()
     const handleClose = () => navigate(-1)
 
-    const deleteProduct = (id) => {
-        axios.delete(`http://localhost:8000/api/product/delete/${id}`)
-        .then(res => console.log(res))
-        .catch((err) => console.error(err))
-        navigate("/")
+    const handleChange = (e) => {
+        const { name, value } = e.target
+        
+        setProduct((prev) => {
+            return {
+                ...prev,
+                [name]: value,
+            }
+        })
     }
 
-    const updateProduct = (id) => {
-        navigate("/edit/" + id)
+    const saveProduct = () => {
+        axios.put(`http://localhost:8000/api/product/${product._id}`, product)
+        .then(res => console.log(res))
+        .catch((err) => console.error(err))
+        
+        handleClose()
     }
 
     return (
         <div>
             <Modal show={true} onHide={handleClose} fullscreen={true}>
                 <Modal.Header closeButton>
-                    <Modal.Title style={{ textAlign: "center"}}>View a Product</Modal.Title>
+                    <Modal.Title style={{ textAlign: "center"}}>Edit a Product</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
@@ -49,8 +57,8 @@ const Detail = (props) => {
                                 style={{ marginBottom: "2rem" }}
                                 placeholder="Title"
                                 name="title"
-                                disabled
                                 value={product.title ? product.title : "Loading..."}
+                                onChange={handleChange}
                             />
                             <Form.Label
                             >
@@ -60,8 +68,8 @@ const Detail = (props) => {
                                 style={{ marginBottom: "2rem" }}
                                 placeholder="Price"
                                 name="price"
-                                disabled
                                 value={product.price ? product.price : "Loading..."}
+                                onChange={handleChange}
                             />
                             <Form.Label
                             >
@@ -71,30 +79,24 @@ const Detail = (props) => {
                                 style={{ marginBottom: "2rem" }}
                                 placeholder="Description"
                                 name="description"
-                                disabled
                                 value={product.description ? product.description : "Loading..."}
+                                onChange={handleChange}
                             />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer style={{display:"flex", flexDirection: "row", justifyContent: "space-around"}}>
                     <Button 
-                        style={{flexGrow:"1", margin:"1rem"}}
+                        style={{flexGrow:"1", marginBottom:"2rem"}}
                         variant="outline-dark" onClick={handleClose}
                     >
-                        BACK
+                        CANCEL
                     </Button>
                     <Button 
-                        style={{flexGrow:"1", margin:"1rem"}}
-                        variant="outline-danger" onClick={() => deleteProduct(product._id)}
+                        style={{flexGrow:"1", marginBottom:"2rem"}}
+                        variant="outline-primary" onClick={saveProduct}
                     >
-                        DELETE
-                    </Button>
-                    <Button 
-                        style={{flexGrow:"1", margin:"1rem"}}
-                        variant="outline-info" onClick={() => updateProduct(product._id)}
-                    >
-                        EDIT
+                        SAVE CHANGES
                     </Button>
                 </Modal.Footer>
             </Modal>
