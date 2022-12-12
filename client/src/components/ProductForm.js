@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import axios from 'axios';
 import {Button, Form} from 'react-bootstrap'
 
-const ProductForm = () => {
+const ProductForm = (props) => {
+    const {products, setProducts} = props
     const [formData, setFormData] = useState({
         title:"",
         price:"",
@@ -21,16 +22,20 @@ const ProductForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:8000/api/product', formData)
+        axios.post('http://localhost:8000/api/products', formData)
             .then((res) => {
                 console.log(res);
                 console.log(res.data);
+                setProducts([
+                    ...products,
+                    res.data
+                ])
             })
             .catch((err) => console.error(err))
     }
     
     return (
-        <div style={{width:"90%", margin:"auto auto", textAlign: "center"}}>
+        <div style={{width:"60%", margin:"auto auto", textAlign: "center"}}>
             <h1>Product Manager</h1>
             <Form>
                 <Form.Group>
